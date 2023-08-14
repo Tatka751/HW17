@@ -1,24 +1,211 @@
-import logo from './logo.svg';
-import './App.css';
+import uuid4 from "uuid4";
+import styles from "./components/Contact/Contact.module.css";
+import { useState, useEffect } from "react";
+import { CardContact } from "./components/Contact/Contact";
 
 function App() {
+  const [state, setState] = useState({
+    contacts: [
+      {
+        id: uuid4(),
+        sign: "male.jpg",
+        firstName: "Барней",
+        lastName: "Стинсовський",
+        phone: "+380956319521",
+        gender: "male",
+      },
+      {
+        id: uuid4(),
+        sign: "male.jpg",
+        firstName: "Робін",
+        lastName: "Щербатська",
+        phone: "+380931460123",
+        gender: "female",
+      },
+      {
+        id: uuid4(),
+        sign: "nospecify.jpg",
+        firstName: "Анонімний",
+        lastName: "Анонімус",
+        phone: "+380666666666",
+      },
+      {
+        id: uuid4(),
+        sign: "female.jpg",
+        firstName: "Лілія",
+        lastName: "Олдровна",
+        phone: "+380504691254",
+        gender: "female",
+      },
+      {
+        id: uuid4(),
+        sign: "male.jpg",
+        firstName: "Маршен",
+        lastName: "Еріксонян",
+        phone: "+380739432123",
+        gender: "male",
+      },
+      {
+        id: uuid4(),
+        sign: "male.jpg",
+        firstName: "Теодор",
+        lastName: "Мотсбес",
+        phone: "+380956319521",
+        gender: "male",
+      },
+    ],
+    search: "",
+    male: "",
+    female: "",
+    nospecify: "",
+    result: "",
+  });
+
+  function handleSearchChange({ target: { name, value } }) {
+    if (name === "male") {
+      setIsCheckedMale(!isCheckedMale);
+      setState((prev) => ({ ...prev, [name]: value }));
+      filter(name, value);
+      setState((prev) => ({ ...prev, result: filteredContacts }));
+    }
+    if (name === "female") {
+      setIsCheckedFemale(!isCheckedFemale);
+      setState((prev) => ({ ...prev, [name]: value }));
+      filter(state.search, state.male, value, state.nospecify);
+      setState((prev) => ({ ...prev, result: filteredContacts }));
+    }
+    if (name === "nospecify") {
+      setIsCheckedNospecify(!isCheckedNospecify);
+      setState((prev) => ({ ...prev, [name]: value }));
+      filter(state.search, state.male, state.female, value);
+      setState((prev) => ({ ...prev, result: filteredContacts }));
+    }
+
+    if (name === "search") {
+      setState((prev) => ({ ...prev, [name]: value }));
+      filter(name, value);
+      setState((prev) => ({ ...prev, result: filteredContacts }));
+    }
+  }
+
+  useEffect(() => {}, [state]);
+
+  let filteredContacts = [...state.contacts];
+  const [isCheckedMale, setIsCheckedMale] = useState(false);
+  const [isCheckedFemale, setIsCheckedFemale] = useState(false);
+  const [isCheckedNospecify, setIsCheckedNospecify] = useState(false);
+
+  function filter(name, arg) {
+    if (name === "search") {
+      if (state.result) {
+        filteredContacts = state.contacts.filter((contacts) => {
+          return (
+            contacts.firstName.toLowerCase().includes(arg.toLowerCase()) ||
+            contacts.lastName.toLowerCase().includes(arg.toLowerCase()) ||
+            contacts.phone.toLowerCase().includes(arg.toLowerCase())
+          );
+        });
+      } else {
+        filteredContacts = state.contacts.filter((contacts) => {
+          return (
+            contacts.firstName.toLowerCase().includes(arg.toLowerCase()) ||
+            contacts.lastName.toLowerCase().includes(arg.toLowerCase()) ||
+            contacts.phone.toLowerCase().includes(arg.toLowerCase())
+          );
+        });
+      }
+    }
+
+    // if (name === 'male'){
+
+    //   if (state.male === true){
+    //     if (state.result) {
+    //       filteredContacts = state.result.filter((result) => {
+    //          return result.gender === name })
+    //     } else {
+    //       filteredContacts = state.contacts.filter((contacts) => {
+    //         return contacts.gender === name })
+    //     }
+    //     console.log(name)
+    //    } else {
+    //     console.log(false)
+    //    }
+
+    // }
+
+    // }
+    // console.log(arg, arg1, arg2, arg3)
+    //     if (arg1 === true ){
+    //       alert(111)
+    //       arg1 = 'male';
+    //       filteredContacts = state.result.filter((result) => {
+    //         return (result.gender === arg1  )})
+    //       }
+
+    //     if (arg2 === true ){
+    //         arg2 = 'female';
+    //         filteredContacts = state.result.filter((result) => {
+    //           return (result.gender === arg2  )})
+    //         }
+
+    //     if (arg3 === true ){
+    //           arg3='';
+    //           filteredContacts = state.result.filter((result) => {
+    //             return (result.firstName.toLowerCase().includes(arg.toLowerCase()) || result.lastName.toLowerCase().includes(arg.toLowerCase())
+    //           || result.phone.toLowerCase().includes(arg.toLowerCase()) ) && (result.gender === arg3  )})
+    //           }
+
+    if (!state.result) {
+      filteredContacts = state.contacts.filter((contacts) => {
+        return contacts.firstName.toLowerCase().includes(arg.toLowerCase());
+      });
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className={styles["search"]}>
+        {" "}
+        Введіть дані для пошуку:
+        <input id="search" name="search" onChange={handleSearchChange} />
+        {/* <div>
+          <input
+            type="checkbox"
+            name="male"
+            value={isCheckedMale}
+            onChange={handleSearchChange}
+          />
+          <label for="male">чоловіча</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            name="female"
+            value={isCheckedFemale}
+            onChange={handleSearchChange}
+          />
+          <label for="female">жіноча</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            name="nospecify"
+            value={isCheckedNospecify}
+            onChange={handleSearchChange}
+          />
+          <label for="nospecify">не вказано</label>
+        </div> */}
+      </div>
+      <div className="App">
+        {!state.result
+          ? state.contacts.map((contacts) => (
+              <CardContact key={contacts.id} data={contacts} />
+            ))
+          : state.result.map((result) => (
+              <CardContact key={result.id} data={result} />
+            ))}
+      </div>
+    </>
   );
 }
 
