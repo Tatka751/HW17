@@ -125,19 +125,19 @@ function App() {
 
   return (
     <>
-      <div className={styles["search"]}>
+      {/* <div className={styles["search"]}>
         {" "}
         Введіть дані для пошуку:
-        <input id="search" name="search" onChange={handleSearchChange} />
+        <input id="search" name="search" onChange={handleSearchChange} /> */}
        
-      </div>
+      {/* </div> */}
       <div className="App">
         {!state.result
           ? state.contacts.map((contacts) => (
               <CardContact key={contacts.id} data={contacts} />
             ))
           : state.result.map((result) => (
-              <CardContact key={result.id} data={result} />
+              <CardContact key={result.id} data={data} />
             ))}
       </div>
     </>
